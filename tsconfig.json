@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "build",
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "esModuleInterop": true,
+
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "forceConsistentCasingInFileNames": true
+  },
+
+  "include": ["src/**/*"],
+
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,21 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/api/**/controllers/*Controller.ts"],
+  "spec": {
+    "specVersion": 3,
+    "outputDirectory": "build",
+    "basePath": "/v1"
+  },
+  "routes": {
+    "routesDir": "build",
+    "basePath": "/v1"
+  },
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "mongoose": ["./node_modules/mongoose"]
+    }
+  },
+  "ignore": ["node_modules/**/*"]
+}
