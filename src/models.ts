@@ -1,4 +1,24 @@
 import { getModelForClass } from "@typegoose/typegoose";
+import Action from "./api/actions/models/Action";
+import CommentReaction from "./api/commentreactions/models/CommentReaction";
+import Comment from "./api/comments/models/Comment";
+import CommentUpvote from "./api/commentupvotes/models/CommentUpvote";
+import MemeReaction from "./api/memereactions/models/MemeReaction";
+import Meme from "./api/memes/models/Meme";
+import MemeUpvote from "./api/memeupvotes/models/MemeUpvote";
+import Reaction from "./api/reactions/models/Reaction";
+import Tag from "./api/tags/models/Tag";
+import Template from "./api/templates/models/Template";
 import User from "./api/users/models/User";
 
+export const ActionModel = getModelForClass(Action);
+export const CommentReactionModel = getModelForClass(CommentReaction);
+export const CommentModel = getModelForClass(Comment);
+export const CommentUpvoteModel = getModelForClass(CommentUpvote);
+export const MemeModel = getModelForClass(Meme);
+export const MemeReactionModel = getModelForClass(MemeReaction);
+export const MemeUpvoteModel = getModelForClass(MemeUpvote);
+export const ReactionModel = getModelForClass(Reaction);
+export const TagModel = getModelForClass(Tag);
+export const TemplateModel = getModelForClass(Template);
 export const UserModel = getModelForClass(User);
