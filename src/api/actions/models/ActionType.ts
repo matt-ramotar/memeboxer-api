@@ -2,6 +2,7 @@ export enum ActionType {
   AddTagToMeme = "ADD TAG TO MEME",
   AddCommentToMeme = "ADD COMMENT TO MEME",
   AddCommentToComment = "ADD COMMENT TO COMMENT",
+  CreateTemplate = "CREATE TEMPLATE",
   CreateMeme = "CREATE MEME",
   FollowUser = "FOLLOW USER",
   FollowTag = "FOLLOW TAG",
