@@ -1,4 +1,5 @@
 import { Body, Controller, Path, Post, Route, Tags } from "tsoa";
+import RealUserService from "../../users/services/UserService";
 import { CreateTemplateInput } from "../entities/CreateTemplateInput";
 import { UpdateEntityTagInput } from "../entities/UpdateEntityTagInput";
 import Template from "../models/Template";
@@ -10,7 +11,13 @@ export class TemplateController extends Controller {
   /** Create template */
   @Post()
   async createTemplate(@Body() input: CreateTemplateInput): Promise<Template> {
-    return await new RealTemplateService().createTemplate(input);
+    const templateService = new RealTemplateService();
+    const userService = new RealUserService();
+
+    const template = await templateService.createTemplate(input);
+    await userService.addTemplate(template.id, input.userId);
+
+    return template;
   }
 
   /** Update template entity tag */

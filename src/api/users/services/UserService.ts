@@ -6,6 +6,7 @@ import addAction from "./addAction";
 import addComment from "./addComment";
 import addCommentReaction from "./addCommentReaction";
 import addFollower from "./addFollower";
+import addTemplate from "./addTemplate";
 import createUser from "./createUser";
 import followTag from "./followTag";
 import followUser from "./followUser";
@@ -36,6 +37,7 @@ interface UserService {
   getGodUserByUsername(username: string): Promise<GodUser>;
   getUsers(): Promise<GodUser[]>;
   createUser(firstName: string, lastName: string, username: string, email: string, googleId?: string, picture?: string): Promise<DocumentType<User>>;
+  addTemplate(templateId: string, userId: string): Promise<void>;
 }
 
 export default class RealUserService implements UserService {
@@ -101,5 +103,9 @@ export default class RealUserService implements UserService {
 
   public async createUser(name: string, username: string, email: string, googleId?: string, picture?: string): Promise<DocumentType<User>> {
     return await createUser(username, email, name, googleId, picture);
+  }
+
+  public async addTemplate(templateId: string, userId: string): Promise<void> {
+    return await addTemplate(templateId, userId);
   }
 }

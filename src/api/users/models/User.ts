@@ -7,6 +7,7 @@ import MemeReaction from "../../memereactions/models/MemeReaction";
 import Meme from "../../memes/models/Meme";
 import MemeUpvote from "../../memeupvotes/models/MemeUpvote";
 import Tag from "../../tags/models/Tag";
+import Template from "../../templates/models/Template";
 import { GodUser, RealGodUser } from "./GodUser";
 
 /**
@@ -43,6 +44,9 @@ export default class User {
 
   @prop({ ref: () => Tag })
   tagsFollowingIds?: string[];
+
+  @prop({ ref: () => Template })
+  templateIds?: string[];
 
   @prop({ ref: () => Meme })
   memeIds?: string[];
