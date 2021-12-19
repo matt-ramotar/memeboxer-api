@@ -5,6 +5,7 @@ import { StorageResponse } from "../entities/responses";
 export default async function uploadPng(request: Request, response: Response, _: NextFunction): Promise<Response<StorageResponse> | void> {
   try {
     const { key, content, contentEncoding, contentType } = request.body;
+    console.log(request.body);
 
     aws.config.update({
       region: "us-east-2",
