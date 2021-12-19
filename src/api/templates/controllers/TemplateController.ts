@@ -1,4 +1,5 @@
-import { Body, Controller, Path, Post, Route, Tags } from "tsoa";
+import { Body, Controller, Get, Path, Post, Route, Tags } from "tsoa";
+import { TemplateModel } from "../../../models";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import RealUserService from "../../users/services/UserService";
@@ -36,5 +37,11 @@ export class TemplateController extends Controller {
   @Post("{templateId}/tag")
   async updateEntityTag(@Path() templateId: string, @Body() input: UpdateEntityTagInput): Promise<Template> {
     return await new RealTemplateService().updateEntityTag(templateId, input.entityTag);
+  }
+
+  /** Get all */
+  @Get()
+  async getTemplates(): Promise<Template[]> {
+    return await TemplateModel.find();
   }
 }
