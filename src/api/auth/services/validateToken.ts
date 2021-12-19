@@ -23,7 +23,7 @@ export default async function validateToken(request: Request, response: Response
 
     if (!user) throw UnsuccessfulTokenValidationReason.InvalidToken;
 
-    return response.json(new TokenValidationSuccess(user, token));
+    return response.json(new TokenValidationSuccess(user.toPojo(), token));
   } catch (error) {
     switch (error) {
       case UnsuccessfulTokenValidationReason.InvalidToken:

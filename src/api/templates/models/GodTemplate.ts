@@ -1,24 +1,27 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { TemplateModel } from "../../../models";
 import Meme from "../../memes/models/Meme";
+import User from "../../users/models/User";
 import { TemplateData } from "../entities/TemplateData";
 
 export interface GodTemplate {
   id: string;
-  imageUrl: string;
+  entityTag?: string;
   data?: TemplateData[];
   memes?: Meme[];
+  user: User;
 }
 
 export class RealGodTemplate implements GodTemplate {
   readonly id: string;
-  readonly imageUrl: string;
+  readonly entityTag?: string;
   readonly data?: TemplateData[];
   memes?: Meme[];
+  user!: User;
 
-  constructor(id: string, imageUrl: string, data?: TemplateData[]) {
+  constructor(id: string, entityTag?: string, data?: TemplateData[]) {
     this.id = id;
-    this.imageUrl = imageUrl;
+    this.entityTag = entityTag;
     this.data = data;
   }
 
@@ -34,6 +37,8 @@ export class RealGodTemplate implements GodTemplate {
           this.memes.push(meme);
         }
       }
+
+      if (template.userId) this.user = template.userId as unknown as DocumentType<User>;
     } catch (error) {
       throw error;
     }
