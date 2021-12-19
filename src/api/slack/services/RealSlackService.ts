@@ -6,7 +6,6 @@ interface SlackService {
 
 export default class RealSlackService implements SlackService {
   public async handleChallenge(request: Request, response: Response, _: NextFunction): Promise<Response> {
-    console.log("request", request.body);
     return response.json({ challenge: request.body.challenge });
   }
 }
