@@ -5,7 +5,6 @@ import { StorageResponse } from "../entities/responses";
 export default async function getSignedUrl(request: Request, response: Response, _: NextFunction): Promise<Response<StorageResponse> | void> {
   try {
     const { key } = request.params;
-    console.log(request);
 
     aws.config.update({
       region: "us-east-2",

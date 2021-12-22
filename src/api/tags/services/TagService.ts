@@ -1,3 +1,4 @@
+import { DocumentType } from "@typegoose/typegoose";
 import { CreateTagInput } from "../entities/CreateTagInput";
 import { GodTag } from "../models/GodTag";
 import Tag from "../models/Tag";
@@ -9,7 +10,7 @@ import getTags from "./getTags";
 import removeUser from "./removeUser";
 
 interface TagService {
-  createTag(input: CreateTagInput): Promise<Tag>;
+  createTag(input: CreateTagInput): Promise<DocumentType<Tag>>;
   getTags(): Promise<Tag[]>;
   addMeme(memeId: string, tagId: string): Promise<void>;
   addUser(tagId: string, userId: string): Promise<void>;
@@ -18,7 +19,7 @@ interface TagService {
 }
 
 export default class RealTagService implements TagService {
-  public async createTag(input: CreateTagInput): Promise<Tag> {
+  public async createTag(input: CreateTagInput): Promise<DocumentType<Tag>> {
     return await createTag(input);
   }
 

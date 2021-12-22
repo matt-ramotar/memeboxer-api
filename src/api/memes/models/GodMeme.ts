@@ -9,10 +9,10 @@ import User from "../../users/models/User";
 
 export interface GodMeme {
   id: string;
-  data: string[];
-  imageUrl?: string;
   template: Template;
   user: User;
+  caption?: string;
+  location?: string;
   upvotes?: MemeUpvote[];
   comments?: Comment[];
   reactions?: MemeReaction[];
@@ -20,18 +20,18 @@ export interface GodMeme {
 
 export class RealGodMeme implements GodMeme {
   readonly id: string;
-  readonly data: string[];
-  readonly imageUrl?: string;
+  readonly caption?: string;
+  readonly location?: string;
   template!: Template;
   user!: User;
   upvotes?: MemeUpvote[];
   comments?: Comment[];
   reactions?: MemeReaction[];
 
-  constructor(id: string, data: string[], imageUrl?: string) {
+  constructor(id: string, caption?: string, location?: string) {
     this.id = id;
-    this.data = data;
-    this.imageUrl = imageUrl;
+    this.caption = caption;
+    this.location = location;
   }
 
   public async populate() {

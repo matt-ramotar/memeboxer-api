@@ -86,6 +86,10 @@ export default class User {
   }
 
   public async publishAction(this: DocumentType<User>, actionId: string) {
+    if (this.feed) this.feed.push(actionId);
+    else this.feed = [actionId];
+    await this.save();
+
     await this.populate("usersFollowedByIds")
       .execPopulate()
       .then((user: DocumentType<User>) => user.usersFollowedByIds as unknown as DocumentType<User>[])
