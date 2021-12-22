@@ -46,7 +46,11 @@ export class RealGodMeme implements GodMeme {
 
       if (!meme) throw new MemeNotFound();
 
-      if (meme.templateId) this.template = meme.templateId as unknown as DocumentType<Template>;
+      if (meme.templateId) {
+        this.template = meme.templateId as unknown as DocumentType<Template>;
+        console.log("hitting");
+        this.template;
+      }
       if (meme.userId) this.user = meme.userId as unknown as DocumentType<User>;
       if (meme.upvoteIds) {
         this.upvotes = [];

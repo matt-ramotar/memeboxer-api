@@ -6,6 +6,7 @@ import { DocumentType, prop } from "@typegoose/typegoose";
 import Comment from "../../comments/models/Comment";
 import MemeReaction from "../../memereactions/models/MemeReaction";
 import Tag from "../../tags/models/Tag";
+import Template from "../../templates/models/Template";
 import User from "../../users/models/User";
 import { GodMeme, RealGodMeme } from "./GodMeme";
 
@@ -13,7 +14,7 @@ export default class Meme {
   @prop()
   id!: string;
 
-  @prop()
+  @prop({ ref: () => Template })
   templateId!: string;
 
   @prop({ ref: () => User })

@@ -4,6 +4,7 @@ import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import RealStorageService from "../../storage/services/StorageService";
 import RealTagService from "../../tags/services/TagService";
+import RealTemplateService from "../../templates/services/TemplateService";
 import RealUserService from "../../users/services/UserService";
 import { CreateMemeInput } from "../entities/CreateMemeInput";
 import { GodMeme } from "../models/GodMeme";
@@ -19,6 +20,12 @@ export class MemeController extends Controller {
     return await new RealMemeService().getMeme(memeId);
   }
 
+  /** Get memes */
+  @Get()
+  async getMemes(): Promise<GodMeme[]> {
+    return await new RealMemeService().getMemes();
+  }
+
   /** Create meme */
   @Post()
   async createMeme(@Body() input: CreateMemeInput): Promise<Meme | null> {
@@ -28,6 +35,7 @@ export class MemeController extends Controller {
       const storageService = new RealStorageService();
       const tagService = new RealTagService();
       const userService = new RealUserService();
+      const templateService = new RealTemplateService();
       const actionService = new RealActionService();
 
       const tagIds: string[] = [];
@@ -45,6 +53,7 @@ export class MemeController extends Controller {
       if (!uploadedToS3) throw new RealMemeboxerError("Upload failed.");
 
       await userService.addMeme(meme._id, input.userId);
+      await templateService.addMeme(meme._id, input.templateId);
 
       for (const tagId of tagIds) {
         await tagService.addMeme(meme._id, tagId);
