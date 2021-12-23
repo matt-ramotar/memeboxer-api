@@ -6,6 +6,7 @@ import CommentUpvote from "../../commentupvotes/models/CommentUpvote";
 import MemeReaction from "../../memereactions/models/MemeReaction";
 import Meme from "../../memes/models/Meme";
 import MemeUpvote from "../../memeupvotes/models/MemeUpvote";
+import Notification from "../../notifications/models/Notification";
 import Tag from "../../tags/models/Tag";
 import Template from "../../templates/models/Template";
 import { GodUser, RealGodUser } from "./GodUser";
@@ -68,6 +69,9 @@ export default class User {
 
   @prop({ ref: () => Action })
   actionIds?: string[];
+
+  @prop({ ref: () => Notification })
+  notificationIds?: string[];
 
   @prop({ ref: () => Action })
   feed?: string[];

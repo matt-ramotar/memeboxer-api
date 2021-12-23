@@ -46,28 +46,26 @@ export class RealGodMeme implements GodMeme {
 
       if (!meme) throw new MemeNotFound();
 
-      if (meme.templateId) {
-        this.template = meme.templateId as unknown as DocumentType<Template>;
-        console.log("hitting");
-        this.template;
-      }
-      if (meme.userId) this.user = meme.userId as unknown as DocumentType<User>;
+      if (meme.templateId) this.template = (meme.templateId as unknown as DocumentType<Template>).toPojo();
+
+      if (meme.userId) this.user = (meme.userId as unknown as DocumentType<User>).toPojo();
+
       if (meme.upvoteIds) {
         this.upvotes = [];
         for (const upvote of meme.upvoteIds as unknown as DocumentType<MemeUpvote>[]) {
-          this.upvotes.push(upvote);
+          this.upvotes.push(upvote.toPojo());
         }
       }
       if (meme.commentIds) {
         this.comments = [];
         for (const comment of meme.commentIds as unknown as DocumentType<Comment>[]) {
-          this.comments.push(comment);
+          this.comments.push(comment.toPojo());
         }
       }
       if (meme.reactionIds) {
         this.reactions = [];
         for (const reaction of meme.reactionIds as unknown as DocumentType<MemeReaction>[]) {
-          this.reactions.push(reaction);
+          this.reactions.push(reaction.toPojo());
         }
       }
     } catch (error) {

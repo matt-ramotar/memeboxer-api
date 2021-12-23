@@ -1,11 +1,14 @@
 import { Body, Controller, Get, Path, Post, Route, Tags } from "tsoa";
-import { RealMemeboxerError } from "../../../errors";
+import { MemeNotFound, RealMemeboxerError } from "../../../errors";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
+import RealMemeReactionService from "../../memereactions/services/MemeReactionService";
+import RealNotificationService from "../../notifications/services/NotificationService";
 import RealStorageService from "../../storage/services/StorageService";
 import RealTagService from "../../tags/services/TagService";
 import RealTemplateService from "../../templates/services/TemplateService";
 import RealUserService from "../../users/services/UserService";
+import { AddReactionInput } from "../entities/AddReactionInput";
 import { CreateMemeInput } from "../entities/CreateMemeInput";
 import { GodMeme } from "../models/GodMeme";
 import Meme from "../models/Meme";
@@ -30,7 +33,6 @@ export class MemeController extends Controller {
   @Post()
   async createMeme(@Body() input: CreateMemeInput): Promise<Meme | null> {
     try {
-      console.log("$INPUT", input);
       const memeService = new RealMemeService();
       const storageService = new RealStorageService();
       const tagService = new RealTagService();
@@ -71,6 +73,46 @@ export class MemeController extends Controller {
       return meme.toPojo();
     } catch (error) {
       console.log(error);
+      return null;
+    }
+  }
+
+  /** Add reaction */
+  @Post("{memeId}/reactions")
+  async addMemeReaction(@Path() memeId: string, @Body() input: AddReactionInput): Promise<GodMeme | null> {
+    try {
+      const memeReactionService = new RealMemeReactionService();
+      const memeService = new RealMemeService();
+      const actionService = new RealActionService();
+      const userService = new RealUserService();
+      const notificationService = new RealNotificationService();
+
+      const meme = await memeService.getMeme(memeId);
+      if (!meme) throw new MemeNotFound();
+
+      const otherUserId = meme.user.id;
+
+      const memeReaction = await memeReactionService.createMemeReaction(memeId, input.userId, input.reactionId);
+
+      await memeService.addMemeReaction(memeId, memeReaction._id);
+      await userService.addMemeReaction(input.userId, memeReaction._id);
+
+      const action = await actionService.createAction({
+        type: ActionType.ReactToMeme,
+        userId: input.userId,
+        memeId,
+        memeReactionId: memeReaction._id
+      });
+
+      await userService.addAction(action._id, input.userId);
+      await userService.publishAction(action._id, input.userId);
+
+      const notification = await notificationService.createNotification(input.userId, action._id);
+
+      await userService.addNotification(otherUserId, notification._id);
+
+      return meme;
+    } catch (error) {
       return null;
     }
   }

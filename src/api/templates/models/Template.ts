@@ -28,7 +28,7 @@ export default class Template {
   userId!: string;
 
   public async toGodTemplate(this: DocumentType<Template>): Promise<GodTemplate> {
-    const godTemplate = new RealGodTemplate(this._id, this.entityTag, this.data);
+    const godTemplate = new RealGodTemplate(this._id, this.name, this.entityTag, this.data);
     await godTemplate.populate();
     return godTemplate;
   }

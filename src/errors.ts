@@ -87,6 +87,18 @@ export class TagNotFound implements MemeboxerError {
   }
 }
 
+export class NotificationNotFound implements MemeboxerError {
+  readonly message?: string = "Notification not found";
+  readonly error?: any;
+  readonly type: string;
+
+  constructor(message?: string, error?: any) {
+    this.message = message;
+    this.error = error;
+    this.type = this.constructor.name;
+  }
+}
+
 export class TemplateNotFound implements MemeboxerError {
   readonly message?: string = "Template not found";
   readonly error?: any;

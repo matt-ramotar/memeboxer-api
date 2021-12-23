@@ -7,6 +7,8 @@ import addComment from "./addComment";
 import addCommentReaction from "./addCommentReaction";
 import addFollower from "./addFollower";
 import addMeme from "./addMeme";
+import addMemeReaction from "./addMemeReaction";
+import addNotification from "./addNotification";
 import addTemplate from "./addTemplate";
 import createUser from "./createUser";
 import followTag from "./followTag";
@@ -40,6 +42,8 @@ interface UserService {
   createUser(firstName: string, lastName: string, username: string, email: string, googleId?: string, picture?: string): Promise<DocumentType<User>>;
   addTemplate(templateId: string, userId: string): Promise<void>;
   addMeme(memeId: string, userId: string): Promise<void>;
+  addMemeReaction(userId: string, memeReactionId: string): Promise<void>;
+  addNotification(userId: string, notificationId: string): Promise<void>;
 }
 
 export default class RealUserService implements UserService {
@@ -113,5 +117,13 @@ export default class RealUserService implements UserService {
 
   public async addMeme(memeId: string, userId: string): Promise<void> {
     return await addMeme(memeId, userId);
+  }
+
+  public async addMemeReaction(userId: string, memeReactionId: string): Promise<void> {
+    return await addMemeReaction(userId, memeReactionId);
+  }
+
+  public async addNotification(userId: string, notificationId: string): Promise<void> {
+    return await addNotification(userId, notificationId);
   }
 }

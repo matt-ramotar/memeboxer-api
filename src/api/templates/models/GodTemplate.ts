@@ -6,6 +6,7 @@ import { TemplateData } from "../entities/TemplateData";
 
 export interface GodTemplate {
   id: string;
+  name: string;
   entityTag?: string;
   data?: TemplateData[];
   memes?: Meme[];
@@ -14,13 +15,15 @@ export interface GodTemplate {
 
 export class RealGodTemplate implements GodTemplate {
   readonly id: string;
+  readonly name: string;
   readonly entityTag?: string;
   readonly data?: TemplateData[];
   memes?: Meme[];
   user!: User;
 
-  constructor(id: string, entityTag?: string, data?: TemplateData[]) {
+  constructor(id: string, name: string, entityTag?: string, data?: TemplateData[]) {
     this.id = id;
+    this.name = name;
     this.entityTag = entityTag;
     this.data = data;
   }

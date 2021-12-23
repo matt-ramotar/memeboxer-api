@@ -35,8 +35,8 @@ export class CommentReactionController extends Controller {
     await commentService.addCommentReaction(commentId, commentReaction.id);
     await userService.addCommentReaction(userId, commentReaction.id);
 
-    await userService.addAction(action.id, userId);
-    await userService.publishAction(action.id, userId);
+    await userService.addAction(action._id, userId);
+    await userService.publishAction(action._id, userId);
 
     return commentReaction;
   }
