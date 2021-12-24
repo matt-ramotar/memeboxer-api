@@ -4,6 +4,7 @@ import { MemeModel } from "../../../models";
 import Comment from "../../comments/models/Comment";
 import MemeReaction from "../../memereactions/models/MemeReaction";
 import MemeUpvote from "../../memeupvotes/models/MemeUpvote";
+import MemeView from "../../memeviews/models/MemeView";
 import Template from "../../templates/models/Template";
 import User from "../../users/models/User";
 
@@ -16,10 +17,12 @@ export interface GodMeme {
   upvotes?: MemeUpvote[];
   comments?: Comment[];
   reactions?: MemeReaction[];
+  memeViews?: MemeView[];
 }
 
 export class RealGodMeme implements GodMeme {
   readonly id: string;
+  readonly created: Date;
   readonly caption?: string;
   readonly location?: string;
   template!: Template;
@@ -27,9 +30,11 @@ export class RealGodMeme implements GodMeme {
   upvotes?: MemeUpvote[];
   comments?: Comment[];
   reactions?: MemeReaction[];
+  memeViews?: MemeView[];
 
-  constructor(id: string, caption?: string, location?: string) {
+  constructor(id: string, created: Date, caption?: string, location?: string) {
     this.id = id;
+    this.created = created;
     this.caption = caption;
     this.location = location;
   }
@@ -42,6 +47,7 @@ export class RealGodMeme implements GodMeme {
         .populate("upvoteIds")
         .populate("commentIds")
         .populate("reactionIds")
+        .populate("memeViewIds")
         .exec();
 
       if (!meme) throw new MemeNotFound();
@@ -68,6 +74,8 @@ export class RealGodMeme implements GodMeme {
           this.reactions.push(reaction.toPojo());
         }
       }
+
+      if (meme.memeViewIds) this.memeViews = (meme.memeViewIds as unknown as DocumentType<MemeView>[]).map((memeView) => memeView.toPojo());
     } catch (error) {
       throw error;
     }

@@ -4,5 +4,5 @@ import { CreateMemeInput } from "../entities/CreateMemeInput";
 import Meme from "../models/Meme";
 
 export default async function createMeme(input: CreateMemeInput): Promise<DocumentType<Meme>> {
-  return await MemeModel.create(input);
+  return await MemeModel.create({ ...input, created: new Date() });
 }

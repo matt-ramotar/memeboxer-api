@@ -51,6 +51,18 @@ export class MemeNotFound implements MemeboxerError {
   }
 }
 
+export class MemeViewNotFound implements MemeboxerError {
+  readonly message?: string = "Meme view not found";
+  readonly error?: any;
+  readonly type: string;
+
+  constructor(message?: string, error?: any) {
+    this.message = message;
+    this.error = error;
+    this.type = this.constructor.name;
+  }
+}
+
 export class MemeReactionNotFound implements MemeboxerError {
   readonly message?: string = "Meme reaction not found";
   readonly error?: any;

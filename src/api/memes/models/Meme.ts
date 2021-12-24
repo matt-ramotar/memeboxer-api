@@ -5,6 +5,7 @@
 import { DocumentType, prop } from "@typegoose/typegoose";
 import Comment from "../../comments/models/Comment";
 import MemeReaction from "../../memereactions/models/MemeReaction";
+import MemeView from "../../memeviews/models/MemeView";
 import Tag from "../../tags/models/Tag";
 import Template from "../../templates/models/Template";
 import User from "../../users/models/User";
@@ -38,8 +39,14 @@ export default class Meme {
   @prop({ ref: () => MemeReaction })
   reactionIds?: string[];
 
+  @prop()
+  created!: Date;
+
+  @prop({ ref: () => MemeView })
+  memeViewIds?: string[];
+
   public async toGodMeme(this: DocumentType<Meme>): Promise<GodMeme> {
-    const godMeme = new RealGodMeme(this._id, this.caption, this.location);
+    const godMeme = new RealGodMeme(this._id, this.created, this.caption, this.location);
     await godMeme.populate();
     return godMeme;
   }

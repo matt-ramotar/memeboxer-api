@@ -3,6 +3,7 @@ import { CreateMemeInput } from "../entities/CreateMemeInput";
 import { GodMeme } from "../models/GodMeme";
 import Meme from "../models/Meme";
 import addMemeReaction from "./addMemeReaction";
+import addMemeView from "./addMemeView";
 import createMeme from "./createMeme";
 import getBestMemes from "./getBestMemes";
 import getMeme from "./getMeme";
@@ -14,6 +15,7 @@ interface MemeService {
   getMemes(): Promise<GodMeme[]>;
   createMeme(input: CreateMemeInput): Promise<DocumentType<Meme>>;
   addMemeReaction(memeId: string, memeReactionId: string): Promise<void>;
+  addMemeView(memeId: string, memeViewId: string): Promise<void>;
 }
 
 export default class RealMemeService implements MemeService {
@@ -35,5 +37,9 @@ export default class RealMemeService implements MemeService {
 
   public async addMemeReaction(memeId: string, memeReactionId: string): Promise<void> {
     return await addMemeReaction(memeId, memeReactionId);
+  }
+
+  public async addMemeView(memeId: string, memeViewId: string): Promise<void> {
+    return await addMemeView(memeId, memeViewId);
   }
 }
