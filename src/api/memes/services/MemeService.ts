@@ -2,6 +2,7 @@ import { DocumentType } from "@typegoose/typegoose";
 import { CreateMemeInput } from "../entities/CreateMemeInput";
 import { GodMeme } from "../models/GodMeme";
 import Meme from "../models/Meme";
+import addComment from "./addComment";
 import addMemeReaction from "./addMemeReaction";
 import addMemeView from "./addMemeView";
 import createMeme from "./createMeme";
@@ -18,6 +19,7 @@ interface MemeService {
   addMemeReaction(memeId: string, memeReactionId: string): Promise<void>;
   addMemeView(memeId: string, memeViewId: string): Promise<void>;
   deleteMeme(memeId: string): Promise<Meme | null>;
+  addComment(memeId: string, commentId: string): Promise<void>;
 }
 
 export default class RealMemeService implements MemeService {
@@ -47,5 +49,9 @@ export default class RealMemeService implements MemeService {
 
   public async deleteMeme(memeId: string): Promise<Meme | null> {
     return await deleteMeme(memeId);
+  }
+
+  public async addComment(memeId: string, commentId: string): Promise<void> {
+    return await addComment(memeId, commentId);
   }
 }

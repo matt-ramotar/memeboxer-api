@@ -17,6 +17,7 @@ export interface GodComment {
   commentUpvotes?: CommentUpvote[];
   commentReactions?: CommentReaction[];
   meme?: GodMeme;
+  created: Date;
 }
 
 export class RealGodComment implements GodComment {
@@ -28,10 +29,12 @@ export class RealGodComment implements GodComment {
   commentUpvotes?: CommentUpvote[];
   commentReactions?: CommentReaction[];
   meme?: GodMeme;
+  readonly created: Date;
 
-  constructor(id: string, body: string) {
+  constructor(id: string, body: string, created: Date) {
     this.id = id;
     this.body = body;
+    this.created = created;
   }
 
   public async populate() {

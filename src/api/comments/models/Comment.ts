@@ -34,8 +34,11 @@ export default class Comment {
   @prop({ ref: () => Meme })
   memeId?: string;
 
+  @prop()
+  created!: Date;
+
   public async toGodComment(this: DocumentType<Comment>): Promise<GodComment> {
-    const godComment = new RealGodComment(this._id, this.body);
+    const godComment = new RealGodComment(this._id, this.body, this.created);
     await godComment.populate();
     return godComment;
   }
