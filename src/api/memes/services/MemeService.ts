@@ -5,6 +5,7 @@ import Meme from "../models/Meme";
 import addMemeReaction from "./addMemeReaction";
 import addMemeView from "./addMemeView";
 import createMeme from "./createMeme";
+import deleteMeme from "./deleteMeme";
 import getBestMemes from "./getBestMemes";
 import getMeme from "./getMeme";
 import getMemes from "./getMemes";
@@ -16,6 +17,7 @@ interface MemeService {
   createMeme(input: CreateMemeInput): Promise<DocumentType<Meme>>;
   addMemeReaction(memeId: string, memeReactionId: string): Promise<void>;
   addMemeView(memeId: string, memeViewId: string): Promise<void>;
+  deleteMeme(memeId: string): Promise<Meme | null>;
 }
 
 export default class RealMemeService implements MemeService {
@@ -41,5 +43,9 @@ export default class RealMemeService implements MemeService {
 
   public async addMemeView(memeId: string, memeViewId: string): Promise<void> {
     return await addMemeView(memeId, memeViewId);
+  }
+
+  public async deleteMeme(memeId: string): Promise<Meme | null> {
+    return await deleteMeme(memeId);
   }
 }

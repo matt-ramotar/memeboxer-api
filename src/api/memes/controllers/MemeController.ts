@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Path, Post, Route, Tags } from "tsoa";
+import { Body, Controller, Delete, Get, Path, Post, Route, Tags } from "tsoa";
 import { MemeNotFound, RealMemeboxerError } from "../../../errors";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
+import RealAuthService from "../../auth/services/AuthService";
 import RealMemeReactionService from "../../memereactions/services/MemeReactionService";
 import RealNotificationService from "../../notifications/services/NotificationService";
 import RealStorageService from "../../storage/services/StorageService";
@@ -10,6 +11,7 @@ import RealTemplateService from "../../templates/services/TemplateService";
 import RealUserService from "../../users/services/UserService";
 import { AddReactionInput } from "../entities/AddReactionInput";
 import { CreateMemeInput } from "../entities/CreateMemeInput";
+import { DeleteMemeInput } from "../entities/DeleteMemeInput";
 import { GodMeme } from "../models/GodMeme";
 import Meme from "../models/Meme";
 import RealMemeService from "../services/MemeService";
@@ -73,6 +75,37 @@ export class MemeController extends Controller {
       return meme.toPojo();
     } catch (error) {
       console.log(error);
+      return null;
+    }
+  }
+
+  /** Delete meme */
+  @Delete("{memeId}")
+  async deleteMeme(@Path() memeId: string, @Body() input: DeleteMemeInput): Promise<Meme | null> {
+    try {
+      const authService = new RealAuthService();
+      const memeService = new RealMemeService();
+      const userService = new RealUserService();
+      const templateService = new RealTemplateService();
+      const tagService = new RealTagService();
+
+      const canDeleteMeme = await authService.canDeleteMeme(input.userId, memeId, input.token);
+      if (!canDeleteMeme) throw new Error();
+
+      const meme = await memeService.deleteMeme(memeId);
+      if (!meme) throw new Error();
+
+      await userService.removeMeme(memeId, input.userId);
+      await templateService.removeMeme(memeId, meme.templateId);
+
+      if (meme.tagIds) {
+        for (const tagId of meme.tagIds) {
+          await tagService.removeMeme(memeId, tagId);
+        }
+      }
+
+      return meme;
+    } catch (error) {
       return null;
     }
   }
