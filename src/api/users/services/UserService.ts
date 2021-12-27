@@ -26,7 +26,7 @@ import unfollowTag from "./unfollowTag";
 import unfollowUser from "./unfollowUser";
 
 interface UserService {
-  getUser(userId: string): Promise<User | null>;
+  getUser(userId: string): Promise<DocumentType<User> | null>;
   followUser(userId: string, userToFollowId: string): Promise<void>;
   addFollower(userId: string, followerId: string): Promise<void>;
   unfollowUser(userId: string, userToUnfollowId: string): Promise<void>;
@@ -51,7 +51,7 @@ interface UserService {
 }
 
 export default class RealUserService implements UserService {
-  public async getUser(userId: string): Promise<User | null> {
+  public async getUser(userId: string): Promise<DocumentType<User> | null> {
     return await getUser(userId);
   }
 

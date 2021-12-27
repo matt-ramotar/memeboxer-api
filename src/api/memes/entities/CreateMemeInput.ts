@@ -5,4 +5,5 @@ export interface CreateMemeInput {
   caption?: string;
   tags?: string[];
   location?: string;
+  text?: string[];
 }

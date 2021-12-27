@@ -8,6 +8,14 @@ export class UserController extends Controller {
   /** Get user by ID */
   @Get("{userId}")
   async getUser(@Path() userId: string): Promise<User | null> {
-    return await new RealUserService().getUser(userId);
+    try {
+      const user = await new RealUserService().getUser(userId);
+      if (!user) throw new Error();
+
+      return user.toPojo();
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
 }

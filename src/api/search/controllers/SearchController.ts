@@ -1,14 +1,25 @@
 import { Body, Controller, Post, Route, Tags } from "tsoa";
-import { GodMeme } from "../../memes/models/GodMeme";
-import RealMemeService from "../../memes/services/MemeService";
 import SearchInput from "../entities/SearchInput";
+import { SearchResults } from "../entities/SearchResults";
+import RealSearchService from "../services/SearchService";
 
 @Route("search")
 @Tags("Search")
 export class SearchController extends Controller {
   @Post()
-  async search(@Body() input: SearchInput): Promise<GodMeme[]> {
-    const { keyword, title, user, tags } = input;
-    return await new RealMemeService().getBestMemes(keyword, title, user, tags);
+  async search(@Body() input: SearchInput): Promise<SearchResults> {
+    const searchService = new RealSearchService();
+
+    const users = await searchService.getUsers(input.input);
+
+    const searchResults: SearchResults = {
+      memes: [],
+      tags: [],
+      users,
+      comments: [],
+      templates: []
+    };
+
+    return searchResults;
   }
 }

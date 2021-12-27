@@ -22,6 +22,9 @@ export default class Meme {
   userId!: string;
 
   @prop()
+  text?: string[];
+
+  @prop()
   caption?: string;
 
   @prop({ ref: () => Tag })
@@ -46,7 +49,7 @@ export default class Meme {
   memeViewIds?: string[];
 
   public async toGodMeme(this: DocumentType<Meme>): Promise<GodMeme> {
-    const godMeme = new RealGodMeme(this._id, this.created, this.caption, this.location);
+    const godMeme = new RealGodMeme(this._id, this.created, this.caption, this.location, this.text);
     await godMeme.populate();
     return godMeme;
   }

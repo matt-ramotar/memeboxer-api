@@ -18,6 +18,7 @@ export interface GodMeme {
   comments?: Comment[];
   reactions?: MemeReaction[];
   memeViews?: MemeView[];
+  text?: string[];
 }
 
 export class RealGodMeme implements GodMeme {
@@ -25,6 +26,7 @@ export class RealGodMeme implements GodMeme {
   readonly created: Date;
   readonly caption?: string;
   readonly location?: string;
+  readonly text?: string[];
   template!: Template;
   user!: User;
   upvotes?: MemeUpvote[];
@@ -32,11 +34,12 @@ export class RealGodMeme implements GodMeme {
   reactions?: MemeReaction[];
   memeViews?: MemeView[];
 
-  constructor(id: string, created: Date, caption?: string, location?: string) {
+  constructor(id: string, created: Date, caption?: string, location?: string, text?: string[]) {
     this.id = id;
     this.created = created;
     this.caption = caption;
     this.location = location;
+    this.text = text;
   }
 
   public async populate() {

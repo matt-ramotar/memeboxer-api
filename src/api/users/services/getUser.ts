@@ -4,7 +4,13 @@ import User from "../models/User";
 
 export default async function getUser(userId: string): Promise<DocumentType<User> | null> {
   try {
-    return await UserModel.findOne({ $or: [{ username: userId }, { id: userId }] });
+    let user = await UserModel.findOne({ username: userId });
+
+    if (!user) {
+      user = await UserModel.findById(userId);
+    }
+
+    return user;
   } catch (error) {
     throw error;
   }
