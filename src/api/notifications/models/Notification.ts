@@ -20,6 +20,9 @@ export default class Notification {
   @prop()
   isRead!: boolean;
 
+  @prop()
+  created!: Date;
+
   public async toGodNotification(this: DocumentType<Notification>): Promise<GodNotification> {
     const godNotification = new RealGodNotification(this._id, this.isRead);
     await godNotification.populate();
