@@ -114,7 +114,7 @@ export default class RealUserService implements UserService {
   }
 
   public async createUser(name: string, username: string, email: string, googleId?: string, picture?: string): Promise<DocumentType<User>> {
-    return await createUser(username, email, name, googleId, picture);
+    return await createUser(name, username, email, googleId, picture);
   }
 
   public async addTemplate(templateId: string, userId: string): Promise<void> {

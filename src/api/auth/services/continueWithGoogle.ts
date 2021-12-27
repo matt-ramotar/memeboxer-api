@@ -13,7 +13,7 @@ export default async function continueWithGoogle(request: Request, response: Res
   let user = await UserModel.findOne({ username });
 
   if (!user) {
-    user = await userService.createUser(email, username, name, googleId, picture);
+    user = await userService.createUser(name, username, email, googleId, picture);
   }
 
   user.isLoggedIn = true;
