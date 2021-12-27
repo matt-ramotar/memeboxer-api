@@ -37,7 +37,7 @@ export class UserController extends Controller {
           const dateA = new Date(a.created);
           const dateB = new Date(b.created);
 
-          return dateA > dateB ? 1 : -1;
+          return dateA > dateB ? -1 : 1;
         });
     } catch (error) {
       console.log(error);

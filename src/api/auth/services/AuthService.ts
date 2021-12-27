@@ -9,6 +9,7 @@ interface AuthService {
   continueWithGoogle(request: Request, response: Response, next: NextFunction): Promise<Response<ContinueWithGoogleSuccess>>;
   validateToken(request: Request, response: Response, next: NextFunction): Promise<Response<SuccessfulAuth | UnsuccessfulAuth>>;
   canDeleteMeme(userId: string, memeId: string, token: string): Promise<boolean>;
+  canDeleteComment(userId: string, commentId: string, token: string): Promise<boolean>;
 }
 
 export default class RealAuthService implements AuthService {
@@ -22,5 +23,9 @@ export default class RealAuthService implements AuthService {
 
   public async canDeleteMeme(userId: string, memeId: string, token: string): Promise<boolean> {
     return await canDeleteMeme(userId, memeId, token);
+  }
+
+  public async canDeleteComment(userId: string, commentId: string, token: string): Promise<boolean> {
+    return await canDeleteMeme(userId, commentId, token);
   }
 }

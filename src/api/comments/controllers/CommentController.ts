@@ -1,11 +1,14 @@
-import { Body, Controller, Get, Path, Post, Route, Tags } from "tsoa";
+import { Body, Controller, Delete, Get, Path, Post, Route, Tags } from "tsoa";
 import { CommentModel, MemeModel } from "../../../models";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
+import RealAuthService from "../../auth/services/AuthService";
 import RealMemeService from "../../memes/services/MemeService";
 import RealNotificationService from "../../notifications/services/NotificationService";
 import RealUserService from "../../users/services/UserService";
 import { CreateCommentInput } from "../entities/CreateCommentInput";
+import { DeleteCommentInput } from "../entities/DeleteCommentInput";
+import Comment from "../models/Comment";
 import { GodComment } from "../models/GodComment";
 import RealCommentService from "../services/CommentService";
 
@@ -64,5 +67,36 @@ export class CommentController extends Controller {
     const commentService = new RealCommentService();
     const godComment = await commentService.getGodCommentById(commentId);
     return godComment;
+  }
+
+  /** Delete comment */
+  @Delete("{commentId}")
+  async deleteComment(@Path() commentId: string, @Body() input: DeleteCommentInput): Promise<Comment | null> {
+    try {
+      const authService = new RealAuthService();
+      const commentService = new RealCommentService();
+      const memeService = new RealMemeService();
+      const userService = new RealUserService();
+
+      const canDeleteComment = await authService.canDeleteComment(input.userId, commentId, input.token);
+      if (!canDeleteComment) throw new Error();
+
+      const comment = await commentService.deleteComment(commentId);
+      if (!comment) throw new Error();
+
+      await userService.removeComment(comment.id, input.userId);
+
+      if (comment.memeId) {
+        await memeService.removeComment(comment.id, comment.memeId);
+      }
+
+      if (comment.parentCommentId) {
+        await commentService.removeChildComment(comment.id, comment.parentCommentId);
+      }
+
+      return comment;
+    } catch (error) {
+      return null;
+    }
   }
 }

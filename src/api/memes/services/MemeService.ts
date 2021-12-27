@@ -10,6 +10,7 @@ import deleteMeme from "./deleteMeme";
 import getBestMemes from "./getBestMemes";
 import getMeme from "./getMeme";
 import getMemes from "./getMemes";
+import removeComment from "./removeComment";
 
 interface MemeService {
   getBestMemes(keyword?: string, title?: string, user?: string, tags?: string[]): Promise<GodMeme[]>;
@@ -20,6 +21,7 @@ interface MemeService {
   addMemeView(memeId: string, memeViewId: string): Promise<void>;
   deleteMeme(memeId: string): Promise<Meme | null>;
   addComment(memeId: string, commentId: string): Promise<void>;
+  removeComment(commentId: string, memeId: string): Promise<void>;
 }
 
 export default class RealMemeService implements MemeService {
@@ -53,5 +55,9 @@ export default class RealMemeService implements MemeService {
 
   public async addComment(memeId: string, commentId: string): Promise<void> {
     return await addComment(memeId, commentId);
+  }
+
+  public async removeComment(commentId: string, memeId: string): Promise<void> {
+    return await removeComment(commentId, memeId);
   }
 }
