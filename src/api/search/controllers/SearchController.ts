@@ -12,13 +12,16 @@ export class SearchController extends Controller {
 
     const users = await searchService.getUsers(input.input);
     const memes = await searchService.getMemes(input.input);
+    const comments = await searchService.getComments(input.input);
+    const tags = await searchService.getTags(input.input);
+    const templates = await searchService.getTemplates(input.input);
 
     const searchResults: SearchResults = {
       memes,
-      tags: [],
+      tags,
       users,
-      comments: [],
-      templates: []
+      comments,
+      templates
     };
 
     return searchResults;

@@ -4,7 +4,10 @@ import Meme from "../../memes/models/Meme";
 import Tag from "../../tags/models/Tag";
 import Template from "../../templates/models/Template";
 import User from "../../users/models/User";
+import getComments from "./getComments";
 import getMemes from "./getMemes";
+import getTags from "./getTags";
+import getTemplates from "./getTemplates";
 import getUsers from "./getUsers";
 
 interface SearchService {
@@ -16,20 +19,17 @@ interface SearchService {
 }
 
 export default class RealSearchService implements SearchService {
-  async getMemes(input: string): Promise<DocumentType<Meme>[]> {
+  public async getMemes(input: string): Promise<DocumentType<Meme>[]> {
     return await getMemes(input);
   }
-  getTags(input: string): Promise<DocumentType<Tag>[]> {
-    console.log(input);
-    throw new Error("Method not implemented.");
+  public async getTags(input: string): Promise<DocumentType<Tag>[]> {
+    return await getTags(input);
   }
-  getTemplates(input: string): Promise<DocumentType<Template>[]> {
-    console.log(input);
-    throw new Error("Method not implemented.");
+  public async getTemplates(input: string): Promise<DocumentType<Template>[]> {
+    return await getTemplates(input);
   }
-  getComments(input: string): Promise<DocumentType<Comment>[]> {
-    console.log(input);
-    throw new Error("Method not implemented.");
+  public async getComments(input: string): Promise<DocumentType<Comment>[]> {
+    return await getComments(input);
   }
   public async getUsers(input: string): Promise<DocumentType<User>[]> {
     return await getUsers(input);
