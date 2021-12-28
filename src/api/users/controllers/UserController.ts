@@ -1,6 +1,10 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { Controller, Get, Path, Route, Tags } from "tsoa";
+import { Controller, Get, Path, Put, Route, Tags } from "tsoa";
+import isIn from "../../../helpers/isIn";
+import { ActionType } from "../../actions/models/ActionType";
+import RealActionService from "../../actions/services/ActionService";
 import Notification from "../../notifications/models/Notification";
+import RealNotificationService from "../../notifications/services/NotificationService";
 import User from "../models/User";
 import RealUserService from "../services/UserService";
 
@@ -61,6 +65,70 @@ export class UserController extends Controller {
       return unreadNotifications;
     } catch (error) {
       console.log(error);
+      return null;
+    }
+  }
+
+  /** Follow user */
+  @Put("{userId}/followers/{otherUserId}/follow")
+  async followUser(@Path() userId: string, @Path() otherUserId: string): Promise<User | null> {
+    try {
+      const userService = new RealUserService();
+      const actionService = new RealActionService();
+      const notificationService = new RealNotificationService();
+
+      const user = await userService.getUser(userId);
+      const otherUser = await userService.getUser(otherUserId);
+
+      if (!user || !otherUser) throw new Error();
+      if (isIn(otherUserId, user?.usersFollowedByIds)) throw new Error();
+      if (isIn(userId, otherUser?.usersFollowingIds)) throw new Error();
+
+      if (user.usersFollowedByIds) user.usersFollowedByIds.push(otherUserId);
+      else user.usersFollowedByIds = [otherUserId];
+      await user.save();
+
+      if (otherUser.usersFollowingIds) otherUser.usersFollowingIds.push(userId);
+      else otherUser.usersFollowingIds = [userId];
+      await otherUser.save();
+
+      const action = await actionService.createAction({
+        type: ActionType.FollowUser,
+        userId: otherUserId,
+        otherUserId: userId
+      });
+
+      await userService.addAction(action._id, otherUserId);
+      await userService.publishAction(action._id, otherUserId);
+
+      const notification = await notificationService.createNotification(userId, action._id);
+      await userService.addNotification(userId, notification._id);
+
+      return user;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /** Follow user */
+  @Put("{userId}/followers/{otherUserId}/unfollow")
+  async unfollowUser(@Path() userId: string, @Path() otherUserId: string): Promise<User | null> {
+    try {
+      const userService = new RealUserService();
+
+      const user = await userService.getUser(userId);
+      const otherUser = await userService.getUser(otherUserId);
+
+      if (!user || !otherUser || !user.usersFollowedByIds || !otherUser.usersFollowingIds) throw new Error();
+
+      user.usersFollowedByIds = user.usersFollowedByIds.filter((id) => id != otherUserId);
+      await user.save();
+
+      otherUser.usersFollowingIds = otherUser.usersFollowingIds.filter((id) => id != userId);
+      await otherUser.save();
+
+      return user;
+    } catch (error) {
       return null;
     }
   }
