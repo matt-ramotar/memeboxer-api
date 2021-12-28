@@ -143,7 +143,7 @@ export default class RealUserService implements UserService {
     return await removeMeme(memeId, userId);
   }
 
-  public async removeComment(userId: string, commentId: string): Promise<void> {
+  public async removeComment(commentId: string, userId: string): Promise<void> {
     return await removeComment(commentId, userId);
   }
 

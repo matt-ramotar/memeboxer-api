@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UnsuccessfulAuth } from "../entities/errors";
 import { ContinueWithGoogleSuccess, SuccessfulAuth } from "../entities/responses";
+import canDeleteComment from "./canDeleteComment";
 import canDeleteMeme from "./canDeleteMeme";
 import canDeleteMemeReaction from "./canDeleteMemeReaction";
 import continueWithGoogle from "./continueWithGoogle";
@@ -28,7 +29,7 @@ export default class RealAuthService implements AuthService {
   }
 
   public async canDeleteComment(userId: string, commentId: string, token: string): Promise<boolean> {
-    return await canDeleteMeme(userId, commentId, token);
+    return await canDeleteComment(userId, commentId, token);
   }
 
   public async canDeleteMemeReaction(userId: string, memeReactionId: string, token: string): Promise<boolean> {

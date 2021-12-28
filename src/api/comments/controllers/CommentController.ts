@@ -81,17 +81,19 @@ export class CommentController extends Controller {
       const canDeleteComment = await authService.canDeleteComment(input.userId, commentId, input.token);
       if (!canDeleteComment) throw new Error();
 
+      console.log(commentId, input);
+
       const comment = await commentService.deleteComment(commentId);
       if (!comment) throw new Error();
 
-      await userService.removeComment(comment.id, input.userId);
+      await userService.removeComment(commentId, input.userId);
 
       if (comment.memeId) {
-        await memeService.removeComment(comment.id, comment.memeId);
+        await memeService.removeComment(commentId, comment.memeId);
       }
 
       if (comment.parentCommentId) {
-        await commentService.removeChildComment(comment.id, comment.parentCommentId);
+        await commentService.removeChildComment(commentId, comment.parentCommentId);
       }
 
       return comment;
