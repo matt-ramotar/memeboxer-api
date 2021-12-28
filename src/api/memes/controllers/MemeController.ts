@@ -12,6 +12,7 @@ import RealUserService from "../../users/services/UserService";
 import { AddReactionInput } from "../entities/AddReactionInput";
 import { CreateMemeInput } from "../entities/CreateMemeInput";
 import { DeleteMemeInput } from "../entities/DeleteMemeInput";
+import { DeleteReactionInput } from "../entities/DeleteReactionInput";
 import { GodMeme } from "../models/GodMeme";
 import Meme from "../models/Meme";
 import RealMemeService from "../services/MemeService";
@@ -143,6 +144,29 @@ export class MemeController extends Controller {
       const notification = await notificationService.createNotification(input.userId, action._id);
 
       await userService.addNotification(otherUserId, notification._id);
+
+      return meme;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /** Delete reaction */
+  @Delete("{memeId}/reactions/{memeReactionId}")
+  async deleteMemeReaction(@Path() memeId: string, @Path() memeReactionId: string, @Body() input: DeleteReactionInput): Promise<GodMeme | null> {
+    try {
+      const memeService = new RealMemeService();
+      const authService = new RealAuthService();
+      const userService = new RealUserService();
+
+      const canDeleteMemeReaction = await authService.canDeleteMemeReaction(input.userId, memeReactionId, input.token);
+      if (!canDeleteMemeReaction) throw new Error();
+
+      const meme = await memeService.getMeme(memeId);
+      if (!meme) throw new MemeNotFound();
+
+      await memeService.removeMemeReaction(memeReactionId, memeId);
+      await userService.removeMemeReaction(memeReactionId, input.userId);
 
       return meme;
     } catch (error) {

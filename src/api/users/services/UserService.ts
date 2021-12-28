@@ -23,6 +23,7 @@ import publishAction from "./publishAction";
 import removeComment from "./removeComment";
 import removeFollower from "./removeFollower";
 import removeMeme from "./removeMeme";
+import removeMemeReaction from "./removeMemeReaction";
 import unfollowTag from "./unfollowTag";
 import unfollowUser from "./unfollowUser";
 
@@ -50,6 +51,7 @@ interface UserService {
   addNotification(userId: string, notificationId: string): Promise<void>;
   removeMeme(userId: string, memeId: string): Promise<void>;
   removeComment(userId: string, commentId: string): Promise<void>;
+  removeMemeReaction(memeReactionId: string, userId: string): Promise<void>;
 }
 
 export default class RealUserService implements UserService {
@@ -143,5 +145,9 @@ export default class RealUserService implements UserService {
 
   public async removeComment(userId: string, commentId: string): Promise<void> {
     return await removeComment(commentId, userId);
+  }
+
+  public async removeMemeReaction(memeReactionId: string, userId: string): Promise<void> {
+    return await removeMemeReaction(memeReactionId, userId);
   }
 }
