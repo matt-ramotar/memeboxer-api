@@ -11,9 +11,10 @@ export class SearchController extends Controller {
     const searchService = new RealSearchService();
 
     const users = await searchService.getUsers(input.input);
+    const memes = await searchService.getMemes(input.input);
 
     const searchResults: SearchResults = {
-      memes: [],
+      memes,
       tags: [],
       users,
       comments: [],

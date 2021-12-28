@@ -4,6 +4,7 @@ import Meme from "../../memes/models/Meme";
 import Tag from "../../tags/models/Tag";
 import Template from "../../templates/models/Template";
 import User from "../../users/models/User";
+import getMemes from "./getMemes";
 import getUsers from "./getUsers";
 
 interface SearchService {
@@ -15,9 +16,8 @@ interface SearchService {
 }
 
 export default class RealSearchService implements SearchService {
-  getMemes(input: string): Promise<DocumentType<Meme>[]> {
-    console.log(input);
-    throw new Error("Method not implemented.");
+  async getMemes(input: string): Promise<DocumentType<Meme>[]> {
+    return await getMemes(input);
   }
   getTags(input: string): Promise<DocumentType<Tag>[]> {
     console.log(input);
