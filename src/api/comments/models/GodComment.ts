@@ -50,7 +50,7 @@ export class RealGodComment implements GodComment {
 
       if (!comment) throw new CommentNotFound();
 
-      this.user = comment.userId as unknown as DocumentType<User>;
+      this.user = (comment.userId as unknown as DocumentType<User>).toPojo();
 
       if (comment.parentCommentId) this.parentComment = await (comment.parentCommentId as unknown as DocumentType<Comment>).toGodComment();
 

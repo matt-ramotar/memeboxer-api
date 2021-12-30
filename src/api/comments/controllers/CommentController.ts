@@ -3,9 +3,11 @@ import { CommentModel, MemeModel } from "../../../models";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import RealAuthService from "../../auth/services/AuthService";
+import RealCommentReactionService from "../../commentreactions/services/CommentReactionService";
 import RealMemeService from "../../memes/services/MemeService";
 import RealNotificationService from "../../notifications/services/NotificationService";
 import RealUserService from "../../users/services/UserService";
+import { CreateCommentCommentReactionInput } from "../entities/CreateCommentCommentReactionInput";
 import { CreateCommentInput } from "../entities/CreateCommentInput";
 import { DeleteCommentInput } from "../entities/DeleteCommentInput";
 import Comment from "../models/Comment";
@@ -67,6 +69,43 @@ export class CommentController extends Controller {
     const commentService = new RealCommentService();
     const godComment = await commentService.getGodCommentById(commentId);
     return godComment;
+  }
+
+  /** Create comment reaction. */
+  @Post("{commentId}/reactions")
+  async createCommentReaction(@Path() commentId: string, @Body() input: CreateCommentCommentReactionInput): Promise<boolean> {
+    console.log(input);
+    const commentReactionService = new RealCommentReactionService();
+    const commentService = new RealCommentService();
+    const userService = new RealUserService();
+    const actionService = new RealActionService();
+    const notificationService = new RealNotificationService();
+
+    try {
+      const commentReaction = await commentReactionService.createCommentReaction(commentId, input.userId, input.reactionId);
+      const comment = await commentService.getGodCommentById(commentId);
+
+      await commentService.addCommentReaction(commentId, commentReaction.id);
+      await userService.addCommentReaction(input.userId, commentReaction.id);
+
+      const action = await actionService.createAction({
+        type: ActionType.ReactToComment,
+        userId: input.userId,
+        commentId,
+        commentReactionId: commentReaction.id,
+        otherUserId: comment.user.id
+      });
+
+      await userService.addAction(action._id, input.userId);
+      await userService.publishAction(action._id, input.userId);
+
+      const notification = await notificationService.createNotification(comment.user.id, action._id);
+      await userService.addNotification(comment.user.id, notification._id);
+
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   /** Delete comment */
