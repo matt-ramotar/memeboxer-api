@@ -9,7 +9,7 @@ export default async function createCommentReaction(commentId: string, userId: s
       reactionId
     });
 
-    return await commentReaction.toPojo();
+    return commentReaction.toPojo();
   } catch (error) {
     throw error;
   }

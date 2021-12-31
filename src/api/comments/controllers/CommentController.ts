@@ -3,6 +3,7 @@ import { CommentModel, MemeModel } from "../../../models";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import RealAuthService from "../../auth/services/AuthService";
+import CommentReaction from "../../commentreactions/models/CommentReaction";
 import RealCommentReactionService from "../../commentreactions/services/CommentReactionService";
 import RealMemeService from "../../memes/services/MemeService";
 import RealNotificationService from "../../notifications/services/NotificationService";
@@ -67,13 +68,14 @@ export class CommentController extends Controller {
   @Get("{commentId}/god")
   async getGodCommentById(@Path() commentId: string): Promise<GodComment> {
     const commentService = new RealCommentService();
+    console.log("GOD COMMENT");
     const godComment = await commentService.getGodCommentById(commentId);
     return godComment;
   }
 
   /** Create comment reaction. */
   @Post("{commentId}/reactions")
-  async createCommentReaction(@Path() commentId: string, @Body() input: CreateCommentCommentReactionInput): Promise<boolean> {
+  async createCommentReaction(@Path() commentId: string, @Body() input: CreateCommentCommentReactionInput): Promise<CommentReaction | null> {
     console.log(input);
     const commentReactionService = new RealCommentReactionService();
     const commentService = new RealCommentService();
@@ -84,6 +86,8 @@ export class CommentController extends Controller {
     try {
       const commentReaction = await commentReactionService.createCommentReaction(commentId, input.userId, input.reactionId);
       const comment = await commentService.getGodCommentById(commentId);
+
+      if (!commentReaction || !comment) throw new Error();
 
       await commentService.addCommentReaction(commentId, commentReaction.id);
       await userService.addCommentReaction(input.userId, commentReaction.id);
@@ -102,9 +106,9 @@ export class CommentController extends Controller {
       const notification = await notificationService.createNotification(comment.user.id, action._id);
       await userService.addNotification(comment.user.id, notification._id);
 
-      return true;
+      return commentReaction;
     } catch (error) {
-      return false;
+      return null;
     }
   }
 
