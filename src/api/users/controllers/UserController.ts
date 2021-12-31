@@ -1,10 +1,12 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Controller, Get, Path, Put, Route, Tags } from "tsoa";
 import isIn from "../../../helpers/isIn";
+import Action from "../../actions/models/Action";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import Notification from "../../notifications/models/Notification";
 import RealNotificationService from "../../notifications/services/NotificationService";
+import { UserActivity } from "../entities/UserActivity";
 import { GodUser } from "../models/GodUser";
 import User from "../models/User";
 import RealUserService from "../services/UserService";
@@ -65,6 +67,42 @@ export class UserController extends Controller {
     } catch (error) {
       console.log(error);
       return null;
+    }
+  }
+
+  /** Get user reaction activity */
+  @Get("{userId}/activity")
+  async getUserActivity(@Path() username: string): Promise<UserActivity> {
+    try {
+      const userService = new RealUserService();
+
+      const user = await userService.getUser(username);
+      if (!user) throw new Error();
+
+      await user.populate("actionIds").execPopulate();
+
+      const comments = [];
+      const reactions = [];
+
+      for (const action of user.actionIds as unknown as DocumentType<Action>[]) {
+        if (action.type == ActionType.AddCommentToComment || action.type == ActionType.AddCommentToMeme) {
+          comments.push(await action.toGodAction());
+        }
+
+        if (action.type == ActionType.ReactToComment || action.type == ActionType.ReactToMeme) {
+          reactions.push(await action.toGodAction());
+        }
+      }
+
+      return {
+        comments,
+        reactions
+      };
+    } catch (error) {
+      return {
+        comments: [],
+        reactions: []
+      };
     }
   }
 
