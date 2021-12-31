@@ -5,6 +5,7 @@ import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import Notification from "../../notifications/models/Notification";
 import RealNotificationService from "../../notifications/services/NotificationService";
+import { GodUser } from "../models/GodUser";
 import User from "../models/User";
 import RealUserService from "../services/UserService";
 
@@ -15,10 +16,28 @@ export class UserController extends Controller {
   @Get("{userId}")
   async getUser(@Path() userId: string): Promise<User | null> {
     try {
+      if (!userId) throw new Error();
+
       const user = await new RealUserService().getUser(userId);
       if (!user) throw new Error();
 
       return user.toPojo();
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  /** Get god user by ID */
+  @Get("{userId}/god")
+  async getGodUser(@Path() userId: string): Promise<GodUser | null> {
+    try {
+      if (!userId) throw new Error();
+
+      const user = await new RealUserService().getUser(userId);
+      if (!user) throw new Error();
+
+      return await user.toGodUser();
     } catch (error) {
       console.log(error);
       return null;

@@ -76,7 +76,6 @@ export class CommentController extends Controller {
   /** Create comment reaction. */
   @Post("{commentId}/reactions")
   async createCommentReaction(@Path() commentId: string, @Body() input: CreateCommentCommentReactionInput): Promise<CommentReaction | null> {
-    console.log(input);
     const commentReactionService = new RealCommentReactionService();
     const commentService = new RealCommentService();
     const userService = new RealUserService();

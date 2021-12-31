@@ -7,7 +7,7 @@ export default async function getUser(userId: string): Promise<DocumentType<User
     let user = await UserModel.findOne({ username: userId });
 
     if (!user) {
-      user = await UserModel.findById(userId);
+      return await UserModel.findById(userId);
     }
 
     return user;
