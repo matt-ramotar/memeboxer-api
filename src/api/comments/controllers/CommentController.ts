@@ -21,7 +21,7 @@ export class CommentController extends Controller {
   /** Create comment */
   @Post()
   async createComment(@Body() input: CreateCommentInput): Promise<GodComment> {
-    const { userId, parentCommentId, memeId } = input;
+    const { userId, parentCommentId, memeId, isDirect } = input;
 
     const commentService = new RealCommentService();
     const userService = new RealUserService();
@@ -32,7 +32,7 @@ export class CommentController extends Controller {
     const comment = await commentService.createComment(input);
 
     await userService.addComment(userId, comment.id);
-    if (memeId) await memeService.addComment(memeId, comment.id);
+    if (memeId && isDirect) await memeService.addComment(memeId, comment.id);
     if (parentCommentId) commentService.addChildComment(comment.id, parentCommentId);
 
     const userWhoPostedMemeId = (await MemeModel.findById(memeId))?.userId;

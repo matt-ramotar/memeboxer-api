@@ -3,6 +3,7 @@ import { Controller, Get, Path, Put, Route, Tags } from "tsoa";
 import isIn from "../../../helpers/isIn";
 import Action from "../../actions/models/Action";
 import { ActionType } from "../../actions/models/ActionType";
+import { GodAction } from "../../actions/models/GodAction";
 import RealActionService from "../../actions/services/ActionService";
 import Notification from "../../notifications/models/Notification";
 import RealNotificationService from "../../notifications/services/NotificationService";
@@ -81,15 +82,16 @@ export class UserController extends Controller {
 
       await user.populate("actionIds").execPopulate();
 
-      const comments = [];
-      const reactions = [];
+      const comments: GodAction[] = [];
+      const reactions: GodAction[] = [];
 
       for (const action of user.actionIds as unknown as DocumentType<Action>[]) {
         if (action.type == ActionType.AddCommentToComment || action.type == ActionType.AddCommentToMeme) {
-          comments.push(await action.toGodAction());
-        }
-
-        if (action.type == ActionType.ReactToComment || action.type == ActionType.ReactToMeme) {
+          console.log("action", action);
+          const godAction = await action.toGodAction();
+          console.log("god action", godAction);
+          comments.push(godAction);
+        } else if (action.type == ActionType.ReactToComment || action.type == ActionType.ReactToMeme) {
           reactions.push(await action.toGodAction());
         }
       }

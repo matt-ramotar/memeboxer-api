@@ -123,7 +123,7 @@ export class RealGodAction implements GodAction {
     try {
       const otherComment = await CommentModel.findById(id);
       if (!otherComment) throw new CommentNotFound();
-      else this.comment = otherComment.toPojo();
+      else this.otherComment = otherComment.toPojo();
     } catch (error) {
       this.otherComment = undefined;
     }

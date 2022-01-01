@@ -32,13 +32,16 @@ export default class Comment {
   commentReactionIds?: string[];
 
   @prop({ ref: () => Meme })
-  memeId?: string;
+  memeId!: string;
 
   @prop()
   created!: Date;
 
+  @prop()
+  isDirect!: boolean;
+
   public async toGodComment(this: DocumentType<Comment>): Promise<GodComment> {
-    const godComment = new RealGodComment(this._id, this.body, this.created);
+    const godComment = new RealGodComment(this._id, this.body, this.created, this.isDirect);
     await godComment.populate();
     return godComment;
   }

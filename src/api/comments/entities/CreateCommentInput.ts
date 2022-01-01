@@ -3,4 +3,5 @@ export interface CreateCommentInput {
   parentCommentId?: string;
   body: string;
   memeId?: string;
+  isDirect: boolean;
 }
