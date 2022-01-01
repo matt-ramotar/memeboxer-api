@@ -87,12 +87,9 @@ export class UserController extends Controller {
 
       for (const action of user.actionIds as unknown as DocumentType<Action>[]) {
         if (action.type == ActionType.AddCommentToComment || action.type == ActionType.AddCommentToMeme) {
-          console.log("action", action);
-          const godAction = await action.toGodAction();
-          console.log("god action", godAction);
-          comments.push(godAction);
+          comments.unshift(await action.toGodAction());
         } else if (action.type == ActionType.ReactToComment || action.type == ActionType.ReactToMeme) {
-          reactions.push(await action.toGodAction());
+          reactions.unshift(await action.toGodAction());
         }
       }
 
