@@ -71,7 +71,7 @@ export class UserController extends Controller {
   }
 
   /** Get user reaction activity */
-  @Get("{userId}/activity")
+  @Get("{username}/activity")
   async getUserActivity(@Path() username: string): Promise<UserActivity> {
     try {
       const userService = new RealUserService();
