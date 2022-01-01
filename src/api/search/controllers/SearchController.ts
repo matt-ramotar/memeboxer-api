@@ -1,4 +1,5 @@
 import { Body, Controller, Post, Route, Tags } from "tsoa";
+import User from "../../users/models/User";
 import SearchInput from "../entities/SearchInput";
 import { SearchResults } from "../entities/SearchResults";
 import RealSearchService from "../services/SearchService";
@@ -25,5 +26,14 @@ export class SearchController extends Controller {
     };
 
     return searchResults;
+  }
+
+  @Post("users")
+  async getUsers(@Body() input: SearchInput): Promise<User[]> {
+    const searchService = new RealSearchService();
+
+    const users = await searchService.getUsers(input.input);
+
+    return users;
   }
 }
