@@ -4,6 +4,7 @@ import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import RealAuthService from "../../auth/services/AuthService";
 import RealMemeReactionService from "../../memereactions/services/MemeReactionService";
+import RealMemeTagService from "../../memetags/services/MemeTagService";
 import RealNotificationService from "../../notifications/services/NotificationService";
 import RealStorageService from "../../storage/services/StorageService";
 import RealTagService from "../../tags/services/TagService";
@@ -37,11 +38,13 @@ export class MemeController extends Controller {
   async createMeme(@Body() input: CreateMemeInput): Promise<Meme | null> {
     try {
       const memeService = new RealMemeService();
+      const memeTagService = new RealMemeTagService();
       const storageService = new RealStorageService();
       const tagService = new RealTagService();
       const userService = new RealUserService();
       const templateService = new RealTemplateService();
       const actionService = new RealActionService();
+      const notificationService = new RealNotificationService();
 
       const tagIds: string[] = [];
       if (input.tags && input.tags.length > 0) {
@@ -59,6 +62,26 @@ export class MemeController extends Controller {
 
       await userService.addMeme(meme._id, input.userId);
       await templateService.addMeme(meme._id, input.templateId);
+
+      if (input.memeTagInputs && input.memeTagInputs.length > 0) {
+        for (const memeTagInput of input.memeTagInputs) {
+          const memeTag = await memeTagService.createMemeTag({ memeId: meme._id, ...memeTagInput });
+
+          await userService.addMemeTag(memeTag.userId, memeTag._id);
+          await memeService.addMemeTag(memeTag.memeId, memeTag._id);
+
+          const action = await actionService.createAction({
+            type: ActionType.TaggedInMeme,
+            userId: memeTag.userId,
+            otherUserId: input.userId,
+            memeId: memeTag.memeId,
+            memeTagId: memeTag._id
+          });
+
+          const notification = await notificationService.createNotification(memeTag.userId, action._id);
+          await userService.addNotification(memeTag.userId, notification._id);
+        }
+      }
 
       for (const tagId of tagIds) {
         await tagService.addMeme(meme._id, tagId);

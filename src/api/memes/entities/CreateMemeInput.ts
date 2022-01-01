@@ -6,4 +6,11 @@ export interface CreateMemeInput {
   tags?: string[];
   location?: string;
   text?: string[];
+  memeTagInputs?: MemeTagInput[];
+}
+
+export interface MemeTagInput {
+  userId: string;
+  xOffset: number;
+  yOffset: number;
 }

@@ -7,6 +7,7 @@ import Comment from "../../comments/models/Comment";
 import CommentUpvote from "../../commentupvotes/models/CommentUpvote";
 import MemeReaction from "../../memereactions/models/MemeReaction";
 import Meme from "../../memes/models/Meme";
+import MemeTag from "../../memetags/models/MemeTag";
 import MemeUpvote from "../../memeupvotes/models/MemeUpvote";
 import Tag from "../../tags/models/Tag";
 import User from "./User";
@@ -28,6 +29,7 @@ export interface GodUser {
   commentUpvotes?: CommentUpvote[];
   commentReactions?: CommentReaction[];
   actions?: Action[];
+  memeTags?: MemeTag[];
 }
 
 export class RealGodUser implements GodUser {
@@ -47,6 +49,7 @@ export class RealGodUser implements GodUser {
   commentUpvotes?: CommentUpvote[];
   commentReactions?: CommentReaction[];
   actions?: Action[];
+  memeTags?: MemeTag[];
 
   constructor(id: string, name: string, email: string, username: string, googleId: string, picture?: string) {
     this.id = id;
@@ -70,6 +73,7 @@ export class RealGodUser implements GodUser {
         .populate("commentUpvoteIds")
         .populate("commentReactionIds")
         .populate("actionIds")
+        .populate("memeTagIds")
         .exec();
 
       if (!user) throw new UserNotFound();
@@ -84,6 +88,7 @@ export class RealGodUser implements GodUser {
       this.commentUpvotes = (user.commentUpvoteIds as unknown as DocumentType<CommentUpvote>[]).map((upvote) => upvote.toPojo());
       this.commentReactions = (user.commentReactionIds as unknown as DocumentType<CommentReaction>[]).map((reaction) => reaction.toPojo());
       this.actions = (user.actionIds as unknown as DocumentType<Action>[]).map((action) => action.toPojo());
+      if (user.memeTagIds) this.memeTags = (user.memeTagIds as unknown as DocumentType<MemeTag>[]).map((memeTag) => memeTag.toPojo());
     } catch (error) {
       throw error;
     }

@@ -4,6 +4,7 @@ import { GodMeme } from "../models/GodMeme";
 import Meme from "../models/Meme";
 import addComment from "./addComment";
 import addMemeReaction from "./addMemeReaction";
+import addMemeTag from "./addMemeTag";
 import addMemeView from "./addMemeView";
 import createMeme from "./createMeme";
 import deleteMeme from "./deleteMeme";
@@ -24,6 +25,7 @@ interface MemeService {
   addComment(memeId: string, commentId: string): Promise<void>;
   removeComment(commentId: string, memeId: string): Promise<void>;
   removeMemeReaction(memeReactionId: string, memeId: string): Promise<void>;
+  addMemeTag(memeId: string, memeTagId: string): Promise<void>;
 }
 
 export default class RealMemeService implements MemeService {
@@ -65,5 +67,9 @@ export default class RealMemeService implements MemeService {
 
   public async removeMemeReaction(memeReactionId: string, memeId: string): Promise<void> {
     return await removeMemeReaction(memeReactionId, memeId);
+  }
+
+  public async addMemeTag(memeId: string, memeTagId: string): Promise<void> {
+    return await addMemeTag(memeId, memeTagId);
   }
 }

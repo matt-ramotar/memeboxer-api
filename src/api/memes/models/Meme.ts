@@ -5,6 +5,7 @@
 import { DocumentType, prop } from "@typegoose/typegoose";
 import Comment from "../../comments/models/Comment";
 import MemeReaction from "../../memereactions/models/MemeReaction";
+import MemeTag from "../../memetags/models/MemeTag";
 import MemeView from "../../memeviews/models/MemeView";
 import Tag from "../../tags/models/Tag";
 import Template from "../../templates/models/Template";
@@ -47,6 +48,9 @@ export default class Meme {
 
   @prop({ ref: () => MemeView })
   memeViewIds?: string[];
+
+  @prop({ ref: () => MemeTag })
+  memeTagIds?: string[];
 
   public async toGodMeme(this: DocumentType<Meme>): Promise<GodMeme> {
     const godMeme = new RealGodMeme(this._id, this.created, this.caption, this.location, this.text);

@@ -1,9 +1,19 @@
-import { CommentNotFound, CommentReactionNotFound, MemeNotFound, MemeReactionNotFound, TagNotFound, TemplateNotFound, UserNotFound } from "../../../errors";
-import { CommentModel, CommentReactionModel, MemeModel, MemeReactionModel, TagModel, TemplateModel, UserModel } from "../../../models";
+import {
+  CommentNotFound,
+  CommentReactionNotFound,
+  MemeNotFound,
+  MemeReactionNotFound,
+  MemeTagNotFound,
+  TagNotFound,
+  TemplateNotFound,
+  UserNotFound
+} from "../../../errors";
+import { CommentModel, CommentReactionModel, MemeModel, MemeReactionModel, MemeTagModel, TagModel, TemplateModel, UserModel } from "../../../models";
 import CommentReaction from "../../commentreactions/models/CommentReaction";
 import Comment from "../../comments/models/Comment";
 import { default as MemeReaction } from "../../memereactions/models/MemeReaction";
 import Meme from "../../memes/models/Meme";
+import MemeTag from "../../memetags/models/MemeTag";
 import Tag from "../../tags/models/Tag";
 import Template from "../../templates/models/Template";
 import { GodUser } from "../../users/models/GodUser";
@@ -23,6 +33,7 @@ export interface GodAction {
   otherComment?: Comment;
   memeReaction?: MemeReaction;
   commentReaction?: CommentReaction;
+  memeTag?: MemeTag;
 }
 
 export class RealGodAction implements GodAction {
@@ -38,6 +49,7 @@ export class RealGodAction implements GodAction {
   otherComment?: Comment;
   memeReaction?: MemeReaction;
   commentReaction?: CommentReaction;
+  memeTag?: MemeTag;
 
   constructor(id: string, type: ActionType, datetime: Date) {
     this.id = id;
@@ -46,7 +58,7 @@ export class RealGodAction implements GodAction {
   }
 
   public async populate(refs: Refs) {
-    const { userId, otherUserId, templateId, memeId, tagId, commentId, otherCommentId, memeReactionId, commentReactionId } = refs;
+    const { userId, otherUserId, templateId, memeId, tagId, commentId, otherCommentId, memeReactionId, commentReactionId, memeTagId } = refs;
 
     if (userId) await this.setUser(userId);
     if (otherUserId) await this.setOtherUser(otherUserId);
@@ -57,6 +69,7 @@ export class RealGodAction implements GodAction {
     if (otherCommentId) await this.setOtherComment(otherCommentId);
     if (memeReactionId) await this.setMemeReaction(memeReactionId);
     if (commentReactionId) await this.setCommentReaction(commentReactionId);
+    if (memeTagId) await this.setMemeTag(memeTagId);
   }
 
   private async setUser(id: string): Promise<void> {
@@ -146,6 +159,16 @@ export class RealGodAction implements GodAction {
       else this.commentReaction = commentReaction.toPojo();
     } catch (error) {
       this.commentReaction = undefined;
+    }
+  }
+
+  private async setMemeTag(id: string): Promise<void> {
+    try {
+      const memeTag = await MemeTagModel.findById(id);
+      if (!memeTag) throw new MemeTagNotFound();
+      else this.memeTag = memeTag.toPojo();
+    } catch (error) {
+      this.memeTag = undefined;
     }
   }
 }

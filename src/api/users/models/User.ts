@@ -5,6 +5,7 @@ import Comment from "../../comments/models/Comment";
 import CommentUpvote from "../../commentupvotes/models/CommentUpvote";
 import MemeReaction from "../../memereactions/models/MemeReaction";
 import Meme from "../../memes/models/Meme";
+import MemeTag from "../../memetags/models/MemeTag";
 import MemeUpvote from "../../memeupvotes/models/MemeUpvote";
 import MemeView from "../../memeviews/models/MemeView";
 import Notification from "../../notifications/models/Notification";
@@ -79,6 +80,9 @@ export default class User {
 
   @prop({ ref: () => Action })
   feed?: string[];
+
+  @prop({ ref: () => MemeTag })
+  memeTagIds?: string[];
 
   public toPojo(this: DocumentType<User>): User {
     const pojo = this.toObject();

@@ -8,6 +8,7 @@ export enum ActionType {
   FollowTag = "FOLLOW TAG",
   ReactToComment = "REACT TO COMMENT",
   ReactToMeme = "REACT TO MEME",
+  TaggedInMeme = "TAGGED IN MEME",
   UpvoteComment = "UPVOTE COMMENT",
   UpvoteMeme = "UPVOTE MEME"
 }

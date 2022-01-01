@@ -3,6 +3,7 @@ import CommentReaction from "../../commentreactions/models/CommentReaction";
 import Comment from "../../comments/models/Comment";
 import MemeReaction from "../../memereactions/models/MemeReaction";
 import Meme from "../../memes/models/Meme";
+import MemeTag from "../../memetags/models/MemeTag";
 import Tag from "../../tags/models/Tag";
 import Template from "../../templates/models/Template";
 import User from "../../users/models/User";
@@ -50,6 +51,9 @@ export default class Action {
   @prop({ ref: () => CommentReaction })
   commentReactionId?: string;
 
+  @prop({ ref: () => MemeTag })
+  memeTagId?: string;
+
   public async toGodAction(this: DocumentType<Action>): Promise<GodAction> {
     const godAction = new RealGodAction(this._id, this.type, this.datetime);
     await godAction.populate({
@@ -61,7 +65,8 @@ export default class Action {
       commentId: this.commentId,
       otherCommentId: this.otherCommentId,
       memeReactionId: this.memeReactionId,
-      commentReactionId: this.commentReactionId
+      commentReactionId: this.commentReactionId,
+      memeTagId: this.memeTagId
     });
     return godAction;
   }

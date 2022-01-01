@@ -11,4 +11,5 @@ export interface CreateActionInput {
   otherCommentId?: string;
   memeReactionId?: string;
   commentReactionId?: string;
+  memeTagId?: string;
 }
