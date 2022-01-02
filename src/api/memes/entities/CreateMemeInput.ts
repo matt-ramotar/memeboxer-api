@@ -13,4 +13,5 @@ export interface MemeTagInput {
   userId: string;
   xOffset: number;
   yOffset: number;
+  username: string;
 }
