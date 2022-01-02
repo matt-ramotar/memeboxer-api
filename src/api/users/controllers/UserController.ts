@@ -71,6 +71,27 @@ export class UserController extends Controller {
     }
   }
 
+  /** Mark all notifications read */
+  @Put("{userId}/notifications/read")
+  async markAllNotificationsRead(@Path() userId: string): Promise<boolean> {
+    try {
+      const userService = new RealUserService();
+      const notificationService = new RealNotificationService();
+
+      const user = await userService.getUser(userId);
+      if (!user || !user.notificationIds) throw new Error();
+
+      for (const notificationId of user.notificationIds) {
+        await notificationService.markNotificationRead(notificationId);
+      }
+
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
   /** Get user reaction activity */
   @Get("{username}/activity")
   async getUserActivity(@Path() username: string): Promise<UserActivity> {
@@ -115,7 +136,7 @@ export class UserController extends Controller {
       await user.populate("notificationIds").execPopulate();
 
       const unreadNotifications = (user.notificationIds as unknown as DocumentType<Notification>[])
-        .filter((notification) => !notification.isRead)
+        .filter((notification) => notification.isRead != true)
         .map((notification) => notification.toPojo());
 
       return unreadNotifications;
