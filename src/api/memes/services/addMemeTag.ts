@@ -9,8 +9,8 @@ export default async function addMemeTag(memeId: string, memeTagId: string): Pro
     const memeTag = await MemeTagModel.findById(memeTagId);
     if (!memeTag) throw new MemeTagNotFound();
 
-    if (meme.reactionIds) meme.reactionIds.push(memeTagId);
-    else meme.reactionIds = [memeTagId];
+    if (meme.memeTagIds) meme.memeTagIds.push(memeTagId);
+    else meme.memeTagIds = [memeTagId];
 
     await meme.save();
   } catch (error) {
