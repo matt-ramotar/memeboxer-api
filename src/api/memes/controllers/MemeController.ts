@@ -3,6 +3,7 @@ import { MemeNotFound, RealMemeboxerError } from "../../../errors";
 import { ActionType } from "../../actions/models/ActionType";
 import RealActionService from "../../actions/services/ActionService";
 import RealAuthService from "../../auth/services/AuthService";
+import MemeReaction from "../../memereactions/models/MemeReaction";
 import RealMemeReactionService from "../../memereactions/services/MemeReactionService";
 import RealMemeTagService from "../../memetags/services/MemeTagService";
 import RealNotificationService from "../../notifications/services/NotificationService";
@@ -136,7 +137,7 @@ export class MemeController extends Controller {
 
   /** Add reaction */
   @Post("{memeId}/reactions")
-  async addMemeReaction(@Path() memeId: string, @Body() input: AddReactionInput): Promise<GodMeme | null> {
+  async addMemeReaction(@Path() memeId: string, @Body() input: AddReactionInput): Promise<MemeReaction | null> {
     try {
       const memeReactionService = new RealMemeReactionService();
       const memeService = new RealMemeService();
@@ -168,7 +169,7 @@ export class MemeController extends Controller {
 
       await userService.addNotification(otherUserId, notification._id);
 
-      return meme;
+      return memeReaction.toPojo();
     } catch (error) {
       return null;
     }
