@@ -88,14 +88,14 @@ export class CommentController extends Controller {
 
       if (!commentReaction || !comment) throw new Error();
 
-      await commentService.addCommentReaction(commentId, commentReaction.id);
-      await userService.addCommentReaction(input.userId, commentReaction.id);
+      await commentService.addCommentReaction(commentId, commentReaction._id);
+      await userService.addCommentReaction(input.userId, commentReaction._id);
 
       const action = await actionService.createAction({
         type: ActionType.ReactToComment,
         userId: input.userId,
         commentId,
-        commentReactionId: commentReaction.id,
+        commentReactionId: commentReaction._id,
         otherUserId: comment.user.id
       });
 
