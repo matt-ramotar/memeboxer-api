@@ -5,7 +5,15 @@ export default async function removeMemeReaction(memeReactionId: string, memeId:
 
   if (!meme || !meme.reactionIds) return;
 
-  meme.reactionIds = meme.reactionIds.filter((id) => id != memeReactionId);
+  const nextMemeReactionIds = [];
+
+  for (const reactionId of meme.reactionIds) {
+    if (reactionId != memeReactionId) {
+      nextMemeReactionIds.push(reactionId);
+    }
+  }
+
+  meme.reactionIds = nextMemeReactionIds;
 
   await meme.save();
 }

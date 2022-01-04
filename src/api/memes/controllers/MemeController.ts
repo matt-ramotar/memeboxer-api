@@ -186,11 +186,12 @@ export class MemeController extends Controller {
       const canDeleteMemeReaction = await authService.canDeleteMemeReaction(input.userId, memeReactionId, input.token);
       if (!canDeleteMemeReaction) throw new Error();
 
-      const meme = await memeService.getMeme(memeId);
-      if (!meme) throw new MemeNotFound();
-
+      console.log("MEME REACTION ID", memeReactionId);
       await memeService.removeMemeReaction(memeReactionId, memeId);
+
       await userService.removeMemeReaction(memeReactionId, input.userId);
+
+      const meme = await memeService.getMeme(memeId);
 
       return meme;
     } catch (error) {
