@@ -9,6 +9,10 @@
     "start": "node build/src/server.js",
     "prod": "npm run build && npm run start"
   },
+  "engines": {
+    "node": "17.6.0",
+    "npm": "8.5.1"
+  },
   "author": "Matt Ramotar",
   "license": "MIT",
   "dependencies": {
